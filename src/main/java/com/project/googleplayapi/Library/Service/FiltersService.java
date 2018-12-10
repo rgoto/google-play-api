@@ -22,14 +22,27 @@ public class FiltersService implements Serializable {
     @Autowired
     private AndroidVersionService androidVersionService;
 
+    @Autowired
+    private AppService appService;
 
-    public FiltersVO initialSearch() {
-        List<CategoryVO> categoryVOS = categoryService.initiliazeFilter();
-        List<GenryVO> genryVOS = genryService.initiliazeFilter();
-        List<TypeVO> typeVOS = typeService.initializeFilter();
-        List<AndroidVersionVO> androidVersionVOS = androidVersionService.initiliazeFilter();
 
-        return new FiltersVO(categoryVOS, genryVOS, typeVOS, androidVersionVOS);
+    public List<CategoryVO> filtersCategory() {
+        return categoryService.initiliazeFilter();
     }
 
+    public List<GenryVO> filtersGenry() {
+        return genryService.initiliazeFilter();
+    }
+
+    public List<TypeVO> filtersType() {
+        return typeService.initializeFilter();
+    }
+
+    public List<AndroidVersionVO> filterAndroidVersion() {
+        return androidVersionService.initiliazeFilter();
+    }
+
+    public List<ContentRatingVO> filterContentRating() {
+        return appService.getAllContentRating();
+    }
 }

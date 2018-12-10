@@ -38,4 +38,9 @@ public class CategoryService implements Serializable {
 
         return categoryVOS;
     }
+
+    public Category findById(Integer id) {
+        return categoryRepository.findById(id).orElse(null);
+    }
+
 }

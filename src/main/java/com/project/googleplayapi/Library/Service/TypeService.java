@@ -37,4 +37,8 @@ public class TypeService implements Serializable {
 
         return typeVOS;
     }
+
+    public Type findById(Integer id) {
+        return typeRepository.findById(id).orElse(null);
+    }
 }

@@ -38,4 +38,8 @@ public class AndroidVersionService implements Serializable {
 
         return androidVersionVOS;
     }
+
+    public AndroidVersion findById(Integer id) {
+        return androidVersionRepository.findById(id).orElse(null);
+    }
 }

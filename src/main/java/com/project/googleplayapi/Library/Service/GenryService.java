@@ -38,4 +38,8 @@ public class GenryService implements Serializable {
         return genryVOS;
     }
 
+    public Genry findById(Integer id) {
+        return genryRepository.findById(id).orElse(null);
+    }
+
 }

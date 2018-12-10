@@ -38,11 +38,17 @@
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <scope>runtime</scope>
+            <version>8.0.11</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.elasticsearch</groupId>
+            <artifactId>elasticsearch</artifactId>
+            <version>5.6.10</version>
         </dependency>
     </dependencies>
 
@@ -51,6 +57,31 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+
+            <plugin>
+                <groupId>com.microsoft.azure</groupId>
+                <artifactId>azure-webapp-maven-plugin</artifactId>
+                <version>1.4.0</version>
+                <configuration>
+                    <deploymentType>jar</deploymentType>
+
+                    <!-- configure app to run on port 80, required by App Service -->
+                    <appSettings>
+                        <property>
+                            <name>JAVA_OPTS</name>
+                            <value>-Dserver.port=80</value>
+                        </property>
+                    </appSettings>
+
+                    <!-- Web App information -->
+                    <resourceGroup>EstudandoAzure</resourceGroup>
+                    <appName>findyourapp</appName>
+                    <region>eastus2</region>
+
+                    <!-- Java Runtime Stack for Web App on Linux-->
+                    <linuxRuntime>jre8</linuxRuntime>
+                </configuration>
             </plugin>
         </plugins>
     </build>
