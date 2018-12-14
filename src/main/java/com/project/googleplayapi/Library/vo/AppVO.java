@@ -4,6 +4,9 @@ import java.util.List;
 
 public class AppVO {
 
+    public AppVO() {
+    }
+
     public AppVO(Long id, String name, Double rating, CategoryVO category, Integer reviewsQty, String size, String installsQty, TypeVO type, String price, String contentRating, List<GenryVO> genry, String lastUpdate, String version, AndroidVersionVO androidVersion) {
         this.id = id;
         this.name = name;

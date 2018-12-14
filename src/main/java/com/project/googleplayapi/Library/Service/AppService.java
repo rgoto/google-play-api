@@ -3,20 +3,14 @@ package com.project.googleplayapi.Library.Service;
 import com.project.googleplayapi.Library.Model.*;
 import com.project.googleplayapi.Library.Repository.AppRepository;
 import com.project.googleplayapi.Library.vo.*;
-import org.elasticsearch.client.Client;
-import org.elasticsearch.common.settings.Settings;
-import org.elasticsearch.common.transport.InetSocketTransportAddress;
+import org.elasticsearch.search.SearchHits;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
+import java.io.IOException;
 import java.io.Serializable;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,6 +33,9 @@ public class AppService implements Serializable {
 
     @Autowired
     private TypeService typeService;
+
+    @Autowired
+    private ElasticSearchService elasticSearchService;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -82,47 +79,38 @@ public class AppService implements Serializable {
         return contentRatingVOS;
     }
 
+    public ResponseVO advancedSearch(SearchAppVO searchAppVO) throws IOException {
+        Genry genry = null;
+        Type type = null;
+        Category category = null;
+        AndroidVersion androidVersion = null;
+        String contentRating = null;
+        if (null != searchAppVO.getGenryId()) {
+            genry = genryService.findById(searchAppVO.getGenryId());
+        }
 
-    /*
-    public List<AppVO> searchAdvancedSearch(SearchAppVO searchAppVO) {
-        TypeVO typeVO1 = null;
+        if (null != searchAppVO.getTypeId()) {
+            type = typeService.findById(searchAppVO.getTypeId());
+        }
 
-        Genry genry = genryService.findById(searchAppVO.getGenryId());
-        Type type = typeService.findById(searchAppVO.getTypeId());
-        Category category = categoryService.findById(searchAppVO.getTypeId());
-        AndroidVersion androidVersion = androidVersionService.findById(searchAppVO.getAndroidVersionId());
-        String contentRating = of(searchAppVO).map(SearchAppVO::getContentRatingName).orElse(null);
+        if (null != searchAppVO.getCategoryId()) {
+            category = categoryService.findById(searchAppVO.getCategoryId());
+        }
 
+        if (null != searchAppVO.getAndroidVersionId()) {
+            androidVersion = androidVersionService.findById(searchAppVO.getAndroidVersionId());
+        }
 
-        List<App> apps = appRepository.findByAndroidVersion_IdAndCategory_IdAndGenryAndType_IdAndContentRating(
-                searchAppVO.getAndroidVersionId(), searchAppVO.getCategoryId(), genry,
-                searchAppVO.getTypeId(), searchAppVO.getContentRatingName());
+        if (null != searchAppVO.getContentRatingName()) {
+            contentRating = of(searchAppVO).map(SearchAppVO::getContentRatingName).orElse(null);
+        }
 
-        List<AppVO> appVOS = new ArrayList<>();
-        apps.forEach(app -> {
+        AdvancedSearchElasticSearch advancedSearchElasticSearch = new AdvancedSearchElasticSearch(searchAppVO.getSearch(), androidVersion, category, contentRating, genry, type);
 
-            AndroidVersionVO androidVersion = new AndroidVersionVO(app.getAndroidVersion().getId(),
-                    app.getAndroidVersion().getName());
+        SearchHits hits = elasticSearchService.advancedSearch(advancedSearchElasticSearch);
 
-            CategoryVO categoryVO = new CategoryVO(app.getCategory().getId(), app.getCategory().getName());
-
-            TypeVO typeVO = new TypeVO(app.getType().getId(), app.getType().getName());
-
-            List<GenryVO> genryVOS = new ArrayList<>();
-            app.getGenry().forEach(value -> genryVOS.add(new GenryVO(value.getId(), value.getName())));
-
-
-            appVOS.add(new AppVO(app.getId(), app.getName(), app.getRating(), categoryVO, app.getReviewsQty(),
-                    app.getSize(), app.getInstallsQty(), typeVO, app.getPrice(), app.getContentRating(),
-                    genryVOS, app.getLastUpdate(), app.getVersion(), androidVersion));
-        });
-
-
-        return appVOS;
+        return elasticSearchService.tranforms(hits);
     }
-*/
-
-    
 
 
 }

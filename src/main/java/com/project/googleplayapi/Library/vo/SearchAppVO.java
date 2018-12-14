@@ -22,6 +22,8 @@ public class SearchAppVO implements Serializable {
     private String contentRatingName;
     private Integer genryId;
     private Integer typeId;
+    private Integer hits;
+    private Integer page;
 
     public String getSearch() {
         return search;

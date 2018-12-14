@@ -85,17 +85,16 @@ public class LibraryController {
         }
     }
 
-//    @PostMapping(value = "find", produces = "application/json")
-//    public ResponseEntity<?> search(@RequestBody SearchAppVO searchAppVO) {
-//        try {
-//
-//            return new ResponseEntity<>(appService.findByApp(searchAppVO), HttpStatus.OK);
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return new ResponseEntity<>(e.getMessage(), HttpStatus.PRECONDITION_FAILED);
-//        }
-//    }
+    @PostMapping(value = "find/advanced-search", produces = "application/json")
+    public ResponseEntity<?> advancedSearch(@RequestBody SearchAppVO searchAppVO) {
+        try {
+            return new ResponseEntity<>(appService.advancedSearch(searchAppVO), HttpStatus.OK);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.PRECONDITION_FAILED);
+        }
+    }
 
 
 }
